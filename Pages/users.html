@@ -1,111 +1,217 @@
+
+
+<div id="modal-usuario" class="modal-backdrop" style="display: none;">
+    
+    <div class="modal-content">
+        
+        <div class="modal-header">
+            <h5 class="modal-title">Añadir Nuevo Usuario</h5>
+            <button type="button" class="btn-close" id="boton-cerrar-modal"></button>
+        </div>
+        
+        <div class="modal-body">
+            <form id="form-agregar-usuario" novalidate>
+
+                <div class="mb-3">
+                    <label for="nombre_completo" class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-control" id="nombre_completo" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="identificacion" class="form-label">Identificación (Cédula)</label>
+                    <input type="text" class="form-control" id="identificacion" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="correo" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="correo" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" required>
+                    <small class="form-text text-muted">La contraseña se guardará de forma segura (hash).</small>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="id_rol" class="form-label">Rol</label>
+                        <select class="form-select" id="id_rol" required>
+                            <option value="" disabled selected>Seleccione un rol...</option>
+                            <option value="1">Superadmin</option>
+                            <option value="2">Admin</option>
+                            <option value="3">Instructor</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="tipo_contrato" class="form-label">Tipo de Contrato</label>
+                        <input type="text" class="form-control" id="tipo_contrato" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select class="form-select" id="estado" required>
+                            <option value="true" selected>Activo</option>
+                            <option value="false">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+
+            </form>
+        </div>
+
+        <div class="modal-footer ">
+            <button type="button" class="btn btn-secondary me-2" id="boton-cancelar">Cancelar</button>
+            <button type="submit" class="btn btn-primary" form="form-agregar-usuario" id="boton-guardar">Guardar Usuario</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* --- ESTILOS BASE (MOBILE-FIRST) --- */
+    /* Aplican a todos los tamaños de pantalla, pero están pensados para móviles */
+
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); /* Un poco más oscuro para mejor contraste */
+        z-index: 1040;
+        display: none; /* Se cambia a 'flex' con JS */
+        align-items: flex-start; /* Alinea el modal arriba en móviles */
+        justify-content: center;
+        overflow-y: auto; /* Permite scroll en el fondo si el modal es muy alto */
+        padding: 1rem 0; /* Espacio superior e inferior para que no se pegue a los bordes */
+    }
+
+    .modal-content {
+        background-color: #fff;
+        border-radius: 0.5rem; /* Un poco más redondeado */
+        width: 95%; /* Ocupa el 95% del ancho en móviles */
+        max-width: 500px; /* El límite para pantallas más grandes */
+        margin: 0; /* Eliminamos el margen para controlar el espacio con el padding del backdrop */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Una sombra más pronunciada */
+        
+        /* Animación y scroll */
+        animation: slide-down 0.3s ease-out;
+        max-height: 95vh; /* Ocupa como máximo el 95% de la altura de la pantalla */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #dee2e6;
+        flex-shrink: 0; /* Evita que el header se encoja */
+    }
+
+    .modal-body {
+        padding: 1.5rem 1rem; /* Más padding vertical */
+        overflow-y: auto; /* ¡MUY IMPORTANTE! Hace que el formulario sea scrollable si no cabe */
+    }
+
+    .modal-footer {
+        padding: 1rem;
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        justify-content: flex-end; /* Alinea los botones a la derecha */
+        gap: 0.5rem; /* Espacio entre los botones */
+        flex-shrink: 0; /* Evita que el footer se encoja */
+    }
+
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    @keyframes slide-down {
+        from {
+            transform: translateY(-30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* --- ESTILOS PARA ESCRITORIO Y TABLETS GRANDES --- */
+    /* @media query: Aplica estos estilos solo si la pantalla tiene 768px de ancho o más */
+
+    @media (min-width: 768px) {
+        .modal-backdrop {
+            /* En pantallas grandes, volvemos a centrarlo verticalmente */
+            align-items: center;
+            padding: 1.75rem; /* El padding ahora actúa como el margen exterior */
+        }
+
+        .modal-content {
+             /* En pantallas grandes, el ancho ya no es un porcentaje, sino que se rige por max-width */
+            width: 100%; 
+        }
+
+        .modal-body {
+            padding: 1.5rem; /* Padding uniforme en escritorio */
+        }
+    }
+</style>
+
+
+
+
+
+
+
+
+
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="d-md-flex align-items-center">
                     <div>
-                        <h4 class="card-title">Products Performance</h4>
-                        <p class="card-subtitle">Ample Admin Vs Pixel Admin</p>
+                        <h4 class="card-title">Usuarios</h4>
                     </div>
-                    <div class="ms-auto mt-3 mt-md-0">
-                        <select class="form-select theme-select border-0" aria-label="Default select example">
-                            <option value="1">March 2025</option>
-                            <option value="2">March 2025</option>
-                            <option value="3">March 2025</option>
-                        </select>
-                    </div>
+                    
                 </div>
                 <div class="table-responsive mt-4">
                     <table class="table mb-0 text-nowrap varient-table align-middle fs-3">
                         <thead>
+                            <div class="d-flex justify-content-end align-items-center mb-3">
+                                <button id="boton-abrir-modal" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Añadir Usuario
+                                </button>
+                            </div>
                             <tr>
-                                <th scope="col" class="px-0 text-muted">Assigned</th>
+                                <th scope="col" class="px-0 text-muted"id</th>
                                 <th scope="col" class="px-0 text-muted">Name</th>
-                                <th scope="col" class="px-0 text-muted">Priority</th>
-                                <th scope="col" class="px-0 text-muted text-end">Budget</th>
+                                <th scope="col" class="px-0 text-muted">Correo</th>
+                                <th scope="col" class="px-0 text-muted">Rol</th>
+                                <th scope="col" class="px-0 text-muted">Cedula</th>
+                                <th scope="col" class="px-0 text-muted">Contrato</th>
+                                <th scope="col" class="px-0 text-muted">Telefono</th>
+                                <th scope="col" class="px-0 text-muted">Centro</th>
+                                <th scope="col" class="px-0 text-muted">Estado</th>
+                                
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td class="px-0">
-                                    <div class="d-flex align-items-center">
-                                        <img src="./assets/images/profile/user-3.jpg" class="rounded-circle" width="40" alt="flexy" />
-                                        <div class="ms-3">
-                                            <h6 class="mb-0 fw-bolder">Sunil Joshi</h6>
-                                            <span class="text-muted">Web Designer</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-0">Elite Admin</td>
-                                <td class="px-0">
-                                    <span class="badge bg-info">Low</span>
-                                </td>
-                                <td class="px-0 text-dark fw-medium text-end">$3.9K</td>
-                            </tr>
-                            <tr>
-                                <td class="px-0">
-                                    <div class="d-flex align-items-center">
-                                        <img src="./assets/images/profile/user-5.jpg" class="rounded-circle" width="40" alt="flexy" />
-                                        <div class="ms-3">
-                                            <h6 class="mb-0 fw-bolder">Andrew McDownland</h6>
-                                            <span class="text-muted">Project Manager</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-0">Real Homes WP Theme</td>
-                                <td class="px-0">
-                                    <span class="badge text-bg-primary">Medium</span>
-                                </td>
-                                <td class="px-0 text-dark fw-medium text-end">$24.5K</td>
-                            </tr>
-                            <tr>
-                                <td class="px-0">
-                                    <div class="d-flex align-items-center">
-                                        <img src="./assets/images/profile/user-6.jpg" class="rounded-circle" width="40" alt="flexy" />
-                                        <div class="ms-3">
-                                            <h6 class="mb-0 fw-bolder">Christopher Jamil</h6>
-                                            <span class="text-muted">SEO Manager</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-0">MedicalPro WP Theme</td>
-                                <td class="px-0">
-                                    <span class="badge bg-warning">Hight</span>
-                                </td>
-                                <td class="px-0 text-dark fw-medium text-end">$12.8K</td>
-                            </tr>
-                            <tr>
-                                <td class="px-0">
-                                    <div class="d-flex align-items-center">
-                                        <img src="./assets/images/profile/user-7.jpg" class="rounded-circle" width="40" alt="flexy" />
-                                        <div class="ms-3">
-                                            <h6 class="mb-0 fw-bolder">Nirav Joshi</h6>
-                                            <span class="text-muted">Frontend Engineer</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-0">Hosting Press HTML</td>
-                                <td class="px-0">
-                                    <span class="badge bg-danger">Low</span>
-                                </td>
-                                <td class="px-0 text-dark fw-medium text-end">$2.4K</td>
-                            </tr>
-                            <tr>
-                                <td class="px-0">
-                                    <div class="d-flex align-items-center">
-                                        <img src="./assets/images/profile/user-8.jpg" class="rounded-circle" width="40" alt="flexy" />
-                                        <div class="ms-3">
-                                            <h6 class="mb-0 fw-bolder">Micheal Doe</h6>
-                                            <span class="text-muted">Content Writer</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-0">Helping Hands WP Theme</td>
-                                <td class="px-0">
-                                    <span class="badge bg-success">Low</span>
-                                </td>
-                                <td class="px-0 text-dark fw-medium text-end">$9.3K</td>
-                            </tr>
+                        <tbody id="userTable">
+                            
                         </tbody>
                     </table>
                 </div>
@@ -113,3 +219,4 @@
         </div>
     </div>
 </div>
+
